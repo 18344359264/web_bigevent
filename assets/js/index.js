@@ -23,6 +23,7 @@ function getUserInfo() {
             if (res.status !== 0) return layui.layer.msg(res.message)
             layui.layer.msg(res.message)
             renderAvatar(res.data)
+
         }
 
     })
@@ -34,9 +35,11 @@ function renderAvatar(user) {
     $("#welcome").html("欢迎&nbsp;&nbsp;" + name)
 
     if (user.user_pic !== null) {
+
         $(".text-avatar").hide()
         $(".layui-nav-img").attr("src", user.user_pic).show()
     } else {
+
         $(".layui-nav-img").hide()
         let first = name[0].toUpperCase()
         $(".text-avatar").html(first).show()
