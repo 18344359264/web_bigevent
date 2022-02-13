@@ -5,14 +5,7 @@ $(function () {
     let valueLocal = JSON.parse(localStorage.getItem("data"));
     let id = localStorage.getItem("id")
     let cateId = localStorage.getItem("cate_id")
-    if (valueLocal) {
-
-        $("[name=title]").val(valueLocal.title)
-        $("[name=content]").val(valueLocal.content)
-
-
-    }
-
+    let addedit = "add"
 
     initCate()
 
@@ -36,13 +29,7 @@ $(function () {
             }
         })
 
-
     }
-
-
-
-
-
 
     // 1. 初始化图片裁剪器
     var $image = $('#image')
@@ -55,7 +42,6 @@ $(function () {
 
     // 3. 初始化裁剪区域
     $image.cropper(options)
-
 
     $("#btnChooseImage").on("click", function () {
         $("#coverFile").click()
@@ -73,7 +59,6 @@ $(function () {
         })
     })
 
-
     let art_statu = "已发布"
     $("#btnSave2").on("click", function () {
 
@@ -81,10 +66,11 @@ $(function () {
 
     })
 
-
-    // 如果有分类ID根据ID获取文章分类
-    if (cateId) {
-
+    if (valueLocal && cateId) {
+        addedit = "edit"
+        $("[name=title]").val(valueLocal.title)
+        $("[name=content]").val(valueLocal.content)
+        $(".layui-card-header").html("编辑文章")
         $.ajax({
             method: "get",
             url: `/my/article/cates/${cateId}`,
@@ -118,24 +104,17 @@ $(function () {
                 // 得到文件对象后，进行后续的操作
                 fd.append("cover_img", blob)
 
-                if (id && cateId) {
-
-                    publishEdit(fd)
-                } else {
-                    publishArticle(fd)
-                }
+                publishArticle(fd)
             })
 
         art_statu = "已发布"
     })
 
-
     function publishArticle(fd) {
 
-
         $.ajax({
             method: "post",
-            url: "/my/article/add",
+            url: `/my/article/${addedit}`,
             data: fd,
             contentType: false,
             processData: false,
@@ -143,7 +122,7 @@ $(function () {
 
                 if (res.status !== 0) return layer.msg(res.message)
                 layer.msg(res.message)
-
+                addedit = "add"
                 localStorage.removeItem("data")
                 localStorage.removeItem("id")
                 localStorage.removeItem("cate_id")
@@ -153,33 +132,5 @@ $(function () {
         })
 
     }
-
-    function publishEdit(fd) {
-
-        $.ajax({
-            method: "post",
-            url: "/my/article/edit",
-            data: fd,
-            contentType: false,
-            processData: false,
-            success: res => {
-
-                if (res.status !== 0) return layer.msg(res.message)
-                layer.msg(res.message)
-
-                localStorage.removeItem("data")
-                localStorage.removeItem("id")
-                localStorage.removeItem("cate_id")
-                location.href = "../article/art_list.html"
-
-            }
-        })
-
-
-    }
-
-
-
-
 
 })

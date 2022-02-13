@@ -2,7 +2,7 @@ $(function () {
     let layer = layui.layer
     let form = layui.form
     form.verify({
-        nakename: function (value) {
+        nikename: function (value) {
 
             if (value.length > 6) {
 
